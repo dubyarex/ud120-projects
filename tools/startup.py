@@ -1,4 +1,4 @@
-#! C:/Anaconda3/envs/ud120
+#! C:/Anaconda3/envs/ud120/python
 
 print
 print "checking for nltk"

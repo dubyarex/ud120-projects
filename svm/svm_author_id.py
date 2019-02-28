@@ -1,4 +1,5 @@
-#! C:/Anaconda3/envs/ud120
+#! C:/Anaconda3/envs/ud120/python
+
 """ 
     This is the code to accompany the Lesson 2 (SVM) mini-project.
 
