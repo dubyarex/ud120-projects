@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#! C:/Anaconda3/envs/ud120/python
 
 
 def outlierCleaner(predictions, ages, net_worths):
@@ -14,6 +14,10 @@ def outlierCleaner(predictions, ages, net_worths):
     cleaned_data = []
 
     ### your code goes here
+    removal = int(len(predictions)*.1)
+    cleaned_data = zip(ages, net_worths, (predictions - net_worths)**2)
+    cleaned_data.sort(key = lambda tup: -tup[2])
+    cleaned_data = cleaned_data[removal:]
 
     
     return cleaned_data

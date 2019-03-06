@@ -89,7 +89,7 @@ no_pay_poi = 0
 for person in enron_data:
 	if enron_data[person]["total_payments"] == 'NaN' and \
 		enron_data[person]["poi"] == 1:
-			no_pay_poi += 1
+		no_pay_poi += 1
 
 print no_pay_poi
 no_pay_poi_pct = float(no_pay_poi)/poi
