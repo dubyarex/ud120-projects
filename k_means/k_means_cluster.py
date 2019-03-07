@@ -60,10 +60,21 @@ for d in data:
 	if d[1] != 0:
 		x_NaN.append(d)
 
-print max(x_NaN, key=lambda x: x[1])[1]
-print
-print min(x_NaN, key=lambda x: x[1])[1]
+salary_min_max = [max(x_NaN, key=lambda x: x[1])[1], \
+	min(x_NaN, key=lambda x: x[1])[1]]
 
+x_NaN = []
+for d in data:
+	if d[2] != 0:
+		x_NaN.append(d)
+
+options_min_max = [max(x_NaN, key=lambda x: x[2])[2], \
+	min(x_NaN, key=lambda x: x[2])[2]]
+
+print "Salary Min, Max : {}".format(salary_min_max)
+print "Options Min, Max : {}".format(options_min_max)
+print "Salary $200k rescaled: {}".format((200000.-salary_min_max[1])/(salary_min_max[0]-salary_min_max[1])) 
+print "Options $1MM rescaled: {}".format((1000000.-options_min_max[1])/(options_min_max[0]-options_min_max[1])) 
 ### in the "clustering with 3 features" part of the mini-project,
 ### you'll want to change this line to 
 ### for f1, f2, _ in finance_features:
