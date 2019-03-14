@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#! C:/Anaconda3/envs/ud120/python
 
 from nltk.stem.snowball import SnowballStemmer
 import string
@@ -28,7 +28,16 @@ def parseOutText(f):
         text_string = content[1].translate(string.maketrans("", ""), string.punctuation)
 
         ### project part 2: comment out the line below
-        words = text_string
+        # words = text_string
+        stemmer = SnowballStemmer("english")
+        stem_list = []
+        word_list = text_string.split()
+        for word in word_list:
+            if stemmer.stem(word) not in stem_list:
+                stem_list.append(stemmer.stem(word)+" ")
+
+        words = "".join(stem_list)
+
 
         ### split the text string into individual words, stem each word,
         ### and append the stemmed word to words (make sure there's a single
