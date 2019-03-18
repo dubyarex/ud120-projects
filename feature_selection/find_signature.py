@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#! C:/Anaconda3/envs/ud120/python
 
 import pickle
 import numpy
@@ -28,6 +28,8 @@ vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5,
 features_train = vectorizer.fit_transform(features_train)
 features_test  = vectorizer.transform(features_test).toarray()
 
+words = vectorizer.get_feature_names()
+
 
 ### a classic way to overfit is to use a small number
 ### of data points and a large number of features;
@@ -38,6 +40,31 @@ labels_train   = labels_train[:150]
 
 
 ### your code goes here
+from time import time
+from sklearn import tree
+from sklearn.metrics import accuracy_score
 
+clf = tree.DecisionTreeClassifier()
+t0 = time()
+clf = clf.fit(features_train, labels_train)
+print "training time: {}s".format(round(time()-t0,3))
+print
+t0 = time()
+pred = clf.predict(features_test)
+print "prediction time: {}s".format(round(time()-t0,3))
+print
+accuracy = accuracy_score(pred, labels_test)
 
+print "Accuracy: {}".format(accuracy)
+print "No. of Training Points: {}".format(len(features_train))
 
+print
+print
+
+importances = clf.feature_importances_
+
+for index, value in enumerate(importances):
+	if value > 0.2:
+		print "Feature No.: {} \nFeature Importance: {}".format(index, value)
+		print words[index]
+	
