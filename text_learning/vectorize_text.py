@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#! C:/Anaconda3/envs/ud120/python
 
 import os
 import pickle
@@ -7,6 +7,9 @@ import sys
 
 sys.path.append( "../tools/" )
 from parse_out_email_text import parseOutText
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
 
 """
     Starter code to process the emails from Sara and Chris to extract
@@ -29,6 +32,7 @@ from_chris = open("from_chris.txt", "r")
 from_data = []
 word_data = []
 
+
 ### temp_counter is a way to speed up the development--there are
 ### thousands of emails from Sara and Chris, so running over all of them
 ### can take a long time
@@ -41,20 +45,28 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
     for path in from_person:
         ### only look at first 200 emails when developing
         ### once everything is working, remove this line to run over full dataset
-        temp_counter += 1
+        # temp_counter += 1
         if temp_counter < 200:
             path = os.path.join('..', path[:-1])
             print path
             email = open(path, "r")
 
             ### use parseOutText to extract the text from the opened email
+            words = parseOutText(email)
+            
 
             ### use str.replace() to remove any instances of the words
-            ### ["sara", "shackleton", "chris", "germani"]
+            exclude = ["sara", "shackleton", "chris", "germani"]
+            for ex in exclude:
+                words = words.replace(ex, "")
 
+            key = {"sara": 0, "chris": 1}
             ### append the text to word_data
+            word_data.append(words)
+            
 
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
+            from_data.append(key[name])
 
 
             email.close()
@@ -71,5 +83,10 @@ pickle.dump( from_data, open("your_email_authors.pkl", "w") )
 
 
 ### in Part 4, do TfIdf vectorization here
+vectorizer = TfidfVectorizer(stop_words='english')
+vectorizer.fit_transform(word_data)
+
+print len(vectorizer.get_feature_names())
+print vectorizer.get_feature_names()[34597]
 
 
