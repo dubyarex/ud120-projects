@@ -1,4 +1,4 @@
-#!/usr/bin/pickle
+#! C:/Anaconda3/envs/ud120/python
 
 """ a basic script for importing student's POI identifier,
     and checking the results that they get from it 
