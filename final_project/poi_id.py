@@ -12,12 +12,14 @@ from tester import dump_classifier_and_data
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
 
-features_list = ['poi',
-                 'salary',
+features_list = [
+                 'poi',
+                 # 'salary',
                  'total_payments',
-                 'bonus',
+                 # 'bonus',
                  'total_stock_value',
-                 'expenses'] 
+                 # 'expenses'
+                 ] 
 ### You will need to use more features
 
 # Added: total_payments, bonus, total_stock_value, expenses
@@ -70,9 +72,11 @@ for name in data_dict:
 	data_point['fraction_total_poi'] = computeFraction(total_poi, total_messages)
 
 
-custom_features = ['fraction_from_poi',
+custom_features = [
+                   'fraction_from_poi',
                    'fraction_to_poi',
-                   'fraction_total_poi']
+                   'fraction_total_poi'
+                   ]
 for cf in custom_features:
 	features_list.append(cf)
 
@@ -95,7 +99,7 @@ labels, features = targetFeatureSplit(data)
 ### http://scikit-learn.org/stable/modules/pipeline.html
 from sklearn.model_selection import train_test_split
 features_train, features_test, labels_train, labels_test = \
-    train_test_split(features, labels, test_size=0.3, random_state=42)
+    train_test_split(features, labels, test_size=0.4, random_state=42)
 
 # Provided to give you a starting point. Try a variety of classifiers.
 from sklearn.naive_bayes import GaussianNB
