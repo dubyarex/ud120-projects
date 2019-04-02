@@ -15,7 +15,7 @@ from tester import dump_classifier_and_data
 features_list = [
                  'poi',
                  # 'salary',
-                 'total_payments',
+                 # 'total_payments',
                  # 'bonus',
                  'total_stock_value',
                  # 'expenses'
@@ -73,12 +73,12 @@ for name in data_dict:
 
 
 custom_features = [
-                   'fraction_from_poi',
-                   'fraction_to_poi',
-                   'fraction_total_poi'
+                   # 'fraction_from_poi',
+                   # 'fraction_to_poi',
+                   # 'fraction_total_poi'
                    ]
-for cf in custom_features:
-	features_list.append(cf)
+# for cf in custom_features:
+# 	features_list.append(cf)
 
 print
 print features_list
@@ -99,13 +99,17 @@ labels, features = targetFeatureSplit(data)
 ### http://scikit-learn.org/stable/modules/pipeline.html
 from sklearn.model_selection import train_test_split
 features_train, features_test, labels_train, labels_test = \
-    train_test_split(features, labels, test_size=0.4, random_state=42)
+    train_test_split(features, labels, test_size=0.25, random_state=42)
 
 # Provided to give you a starting point. Try a variety of classifiers.
 from sklearn.naive_bayes import GaussianNB
+from sklearn import tree
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
-clf = GaussianNB()
+# clf = GaussianNB()
+# clf = tree.DecisionTreeClassifier(min_samples_split=5)
+clf = SVC(C=1000.0, kernel='rbf', gamma=1.0)
 clf.fit(features_train, labels_train)
 pred = clf.predict(features_test)
 accuracy = accuracy_score(pred, labels_test)
