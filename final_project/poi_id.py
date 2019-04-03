@@ -3,10 +3,11 @@
 from pprint import pprint
 import sys
 import pickle
+import numpy as np
 sys.path.append("../tools/")
 
 from feature_format import featureFormat, targetFeatureSplit
-from tester import dump_classifier_and_data
+from tester import dump_classifier_and_data, test_classifier
 
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
@@ -15,7 +16,7 @@ from tester import dump_classifier_and_data
 features_list = [
                  'poi',
                  # 'salary',
-                 # 'total_payments',
+                 'total_payments',
                  # 'bonus',
                  'total_stock_value',
                  # 'expenses'
@@ -56,6 +57,15 @@ def computeFraction( poi_messages, all_messages ):
 		fraction = float(poi_messages) / all_messages
 	return fraction
 
+def de_NaN(poi_messages):
+	if poi_messages == 'NaN':
+		result = 0.
+	elif poi_messages == 'NaNNaN':
+		result = 0.
+	else:
+		result = poi_messages
+	return result
+
 for name in data_dict:
 	data_point = data_dict[name]
 
@@ -71,14 +81,21 @@ for name in data_dict:
 	total_messages = to_messages + from_messages
 	data_point['fraction_total_poi'] = computeFraction(total_poi, total_messages)
 
+	data_point['total_poi'] = de_NaN(total_poi)
+
+# Using Sklearn's built in feature scaler to scale monetary features
+
+from sklearn.preprocessing import MinMaxScaler
+
 
 custom_features = [
                    # 'fraction_from_poi',
                    # 'fraction_to_poi',
-                   # 'fraction_total_poi'
+                   # 'fraction_total_poi',
+                   'total_poi'
                    ]
-# for cf in custom_features:
-# 	features_list.append(cf)
+for cf in custom_features:
+	features_list.append(cf)
 
 print
 print features_list
@@ -90,7 +107,9 @@ my_dataset = data_dict
 
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, remove_NaN=True, remove_all_zeroes=True, sort_keys = True)
-labels, features = targetFeatureSplit(data)
+scaler = MinMaxScaler()
+scaled_data = scaler.fit_transform(data)
+labels, features = targetFeatureSplit(scaled_data)
 
 ### Task 4: Try a varity of classifiers
 ### Please name your classifier clf for easy export below.
@@ -99,7 +118,7 @@ labels, features = targetFeatureSplit(data)
 ### http://scikit-learn.org/stable/modules/pipeline.html
 from sklearn.model_selection import train_test_split
 features_train, features_test, labels_train, labels_test = \
-    train_test_split(features, labels, test_size=0.25, random_state=42)
+    train_test_split(features, labels, test_size=0.3, random_state=42)
 
 # Provided to give you a starting point. Try a variety of classifiers.
 from sklearn.naive_bayes import GaussianNB
@@ -108,17 +127,21 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 # clf = GaussianNB()
-# clf = tree.DecisionTreeClassifier(min_samples_split=5)
-clf = SVC(C=1000.0, kernel='rbf', gamma=1.0)
+# clf = tree.DecisionTreeClassifier(min_samples_split=8)
+clf = SVC(C=1000.0, kernel='rbf', random_state=42)
 clf.fit(features_train, labels_train)
 pred = clf.predict(features_test)
 accuracy = accuracy_score(pred, labels_test)
 precision = precision_score(pred, labels_test)
 recall = recall_score(pred, labels_test)
 
+print
 print "Accuracy: {}".format(accuracy)
 print "Precision: {}".format(precision)
 print "Recall: {}".format(recall)
+print
+
+test_classifier(clf, data_dict, features_list)
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
 ### using our testing script. Check the tester.py script in the final project
